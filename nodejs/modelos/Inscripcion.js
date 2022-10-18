@@ -1,6 +1,7 @@
-//Importamos mongoose
+// paso 7 - Importamos mongoose y la guardamos en una constante
 const mongoose = require('mongoose');
 
+// paso 8 - definimos una variable let
 let InscripcionSchema = new mongoose.Schema({
     id: Number,
     tipoDocumento: String,
@@ -15,5 +16,5 @@ let InscripcionSchema = new mongoose.Schema({
     codigoIcfes: String,
     estrato: String    
 })
-
+// paso 8 - exponemos al exterior 
 module.exports = mongoose.model('inscripcion', InscripcionSchema, 'Inscripciones');
