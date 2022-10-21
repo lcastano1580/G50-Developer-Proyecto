@@ -1,5 +1,8 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {Cliente} from './cliente.model';
+import {Empleado} from './empleado.model';
+import {Directivo} from './directivo.model';
+import {Servicio} from './servicio.model';
 
 @model({settings: {strict: false}})
 export class Empresa extends Entity {
@@ -42,6 +45,15 @@ export class Empresa extends Entity {
 
   @hasMany(() => Cliente)
   clientes: Cliente[];
+
+  @hasMany(() => Empleado)
+  empleados: Empleado[];
+
+  @hasMany(() => Directivo)
+  directivos: Directivo[];
+
+  @hasMany(() => Servicio)
+  servicios: Servicio[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

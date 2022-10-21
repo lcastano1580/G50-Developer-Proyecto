@@ -1,14 +1,15 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Servicio} from './servicio.model';
+import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
+import {Empresa} from './empresa.model';
+import {Directivo} from './directivo.model';
 
 @model({settings: {strict: false}})
-export class Cliente extends Entity {
+export class Empleado extends Entity {
   @property({
     type: 'string',
     id: true,
     generated: true,
   })
-  clienteid?: string;
+  empleadoid?: string;
 
   @property({
     type: 'string',
@@ -46,31 +47,29 @@ export class Cliente extends Entity {
   })
   direccion: string;
 
-  @property({
-    type: 'string',
-  })
-  empresaId?: string;
-
-  @hasMany(() => Servicio)
-  servicios: Servicio[];
+  @belongsTo(() => Empresa)
+  empresaId: string;
 
   @property({
     type: 'string',
   })
-  servicioId?: string;
+  directivoId?: string;
+
+  @hasMany(() => Directivo)
+  directivos: Directivo[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
 
-  constructor(data?: Partial<Cliente>) {
+  constructor(data?: Partial<Empleado>) {
     super(data);
   }
 }
 
-export interface ClienteRelations {
+export interface EmpleadoRelations {
   // describe navigational properties here
 }
 
-export type ClienteWithRelations = Cliente & ClienteRelations;
+export type EmpleadoWithRelations = Empleado & EmpleadoRelations;
