@@ -15,3 +15,4 @@ export * from './empleado-directivo.controller';
 export * from './empleado.controller';
 export * from './servicio.controller';
 export * from './directivo.controller';
+export * from './notificaciones.controller';
