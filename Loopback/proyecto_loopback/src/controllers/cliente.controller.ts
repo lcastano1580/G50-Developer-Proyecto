@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,15 +17,49 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
+import { main } from '..';
 import {Cliente} from '../models';
+import { Credenciales } from '../models/credenciales.model';
 import {ClienteRepository} from '../repositories';
-
+import { AutenticasionService, NotificasionesService } from '../services';
+// const fetch = require('node-fetch')
 export class ClienteController {
   constructor(
     @repository(ClienteRepository)
     public clienteRepository : ClienteRepository,
+    @service(AutenticasionService)
+    public servicioAutenticacion:AutenticasionService,
+    @service(NotificasionesService)
+    public notificasionService:NotificasionesService,
   ) {}
+
+  @post("/identificarCliente",{
+    responses:{
+      '200':{
+        description: "Identificacion de usuario"
+      }
+    }
+  })
+  async identificarCliente(
+    @requestBody() credenciales: Credenciales
+  ){
+    let c = await this.servicioAutenticacion.IdentificarCliente(credenciales.usuario, credenciales.clave);
+    if(c){
+      let token = this.servicioAutenticacion.GenerarTokenJWT(c);
+      return{
+        datos: {
+          nombre: c.nombre,
+          email: c.email,
+          id: c.clienteid
+        },
+        tk: token
+      }
+    }else{
+      throw new HttpErrors[401]("Datos invalidos");
+    }
+  }
 
   @post('/clientes')
   @response(200, {
@@ -44,6 +79,11 @@ export class ClienteController {
     })
     cliente: Omit<Cliente, 'id'>,
   ): Promise<Cliente> {
+    const calveAleatoria = this.servicioAutenticacion.generarClaveAleatoria();
+    console.log("La caleve es: " + calveAleatoria);
+    this.notificasionService.enviarSMS("La calve que se genero es: " + calveAleatoria);
+    this.notificasionService.enviarEmail("La clave es:" + calveAleatoria);
+    cliente.clave = this.servicioAutenticacion.cifrarClave(cliente.clave);
     return this.clienteRepository.create(cliente);
   }
 

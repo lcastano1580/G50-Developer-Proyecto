@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9"
+  }
+}

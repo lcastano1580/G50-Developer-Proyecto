@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -19,11 +20,15 @@ import {
 } from '@loopback/rest';
 import { Notificaciones } from '../models';
 import { NotificacionesRepository } from '../repositories';
+import { NotificasionesService } from '../services';
 
 export class NotificacionesController {
   constructor(
     @repository(NotificacionesRepository)
     public notificacionesRepository: NotificacionesRepository,
+    @service(NotificasionesService)
+    public notificasionService:NotificasionesService,
+    
   ) { }
 
   @post('/notificaciones')
@@ -44,7 +49,7 @@ export class NotificacionesController {
     })
     notificaciones: Omit<Notificaciones, 'id'>,
   ): Promise<Notificaciones> {
-    this.enviarSMS(notificaciones.mensaje);
+    this.notificasionService.enviarSMS(notificaciones.mensaje);
     return this.notificacionesRepository.create(notificaciones);
   }
 
@@ -149,19 +154,5 @@ export class NotificacionesController {
     await this.notificacionesRepository.deleteById(id);
   }
 
-  enviarSMS(mensaje: any) {// Download the helper library from https://www.twilio.com/docs/node/install
-    // Find your Account SID and Auth Token at twilio.com/console
-    // and set the environment variables. See http://twil.io/secure
-    const accountSid = 'ACe038ebe79c375f490a66a5233e2dd2fa';
-    const authToken = '9a784043f3f072ef27b675e2295f98be';
-    const client = require('twilio')(accountSid, authToken);
-
-    client.messages
-      .create({
-        body: mensaje,
-        from: '+16188364549',
-        to: '+573157739287',
-      })
-      .then((message: any) => console.log(message.sid));
-  }
+  
 }

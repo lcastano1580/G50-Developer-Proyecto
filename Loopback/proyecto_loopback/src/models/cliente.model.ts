@@ -42,6 +42,12 @@ export class Cliente extends Entity {
 
   @property({
     type: 'string',
+    required: false,
+  })
+  clave: string;
+
+  @property({
+    type: 'string',
     required: true,
   })
   direccion: string;
