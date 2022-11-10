@@ -80,7 +80,7 @@ export class ClienteController {
     cliente: Omit<Cliente, 'id'>,
   ): Promise<Cliente> {
     const calveAleatoria = this.servicioAutenticacion.generarClaveAleatoria();
-    console.log("La caleve es: " + calveAleatoria);
+    console.log("La caleve es: " + calveAleatoria); 
     this.notificasionService.enviarSMS("La calve que se genero es: " + calveAleatoria);
     this.notificasionService.enviarEmail("La clave es:" + calveAleatoria);
     cliente.clave = this.servicioAutenticacion.cifrarClave(cliente.clave);
